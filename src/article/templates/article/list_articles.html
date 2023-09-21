@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+مقالات
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-md-5">
+    {% include 'article/components/search.html' %}
+    {% if tag %}
+        <h3 class="text-center mt-5">مقالات منتشر شده با برچسب "{{tag}}"</h3>
+    {% endif %}
+    {% include 'article/components/alist.html' with articles=articles %}
+</div>
+</div>
+{% endblock content %}

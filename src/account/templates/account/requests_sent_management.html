@@ -1,0 +1,143 @@
+{% extends 'account/dashboard_base.html' %}
+
+{% block title %} پیشخوان | مدیریت درخواست های ارسالی {% endblock title %}
+{% block content %}
+<table class="table table-borderless table-hover my-table-management">
+    <thead>
+        <tr class="">
+            <th>#</th>
+            <th>راهنما</th>
+            <th>زمینه</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+            <th>حذف</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for st_request in user_sent_requests %}
+        <tr class="" id="st_request{{st_request.id}}_row">
+            <td class="align-middle">{{forloop.counter}}</td>
+            <td class="align-middle"><a href="{{st_request.user_to.get_absolute_url}}"
+                    target="_blank">{{st_request.user_to}}</a></td>
+            <td class="align-middle">
+                <a href="#!" id="request_field_in_table{{st_request.id}}"
+                    class="text-dark">{{st_request.user_to.mentorsetting.field|truncatewords:5}}</a>
+            </td>
+            <td class="align-middle">
+                <button data-active="{{st_request.approved}}" data-id="{{st_request.id}}"
+                    class="btn p-2 badge {% if st_request.approved == True %} badge-success {% elif st_request.approved == False %} badge-danger{% endif %}">
+                    {% if st_request.approved == True %}
+                    قبول شده
+                    {% elif st_request.approved == False %}
+                    قبول نشده
+                    {% endif %}
+                </button>
+
+            </td>
+            <td class="align-middle">
+                <button data-toggle="modal" data-target="#st_request_info_modal{{st_request.id}}"
+                    class="btn btn-outline-warning" {% if st_request.approved == False or st_request.user_to.mentorsetting.active == False %} disabled
+                    {% endif %}>مشاهده</button>
+            </td>
+            <td class="align-middle">
+                <button data-toggle="modal" data-target="#delete_st_request_modal{{st_request.id}}"
+                    class="btn btn-outline-danger" {% if st_request.approved == True %} disabled
+                    {% endif %}>حذف</button>
+            </td>
+        </tr>
+
+        <div class="modal fade" id="st_request_info_modal{{st_request.id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title ml-auto">مشاهده اطلاعات راهنما</h5>
+                        <div class="mr-auto">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        {% with st_request.user_to.mentorsetting as mentor_info %}
+                        {% if mentor_info.active == True %}
+                        <div class="list-group">
+                            <a href="\\" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">زمینه</h5>
+                                </div>
+                                <p class="mb-1">{{mentor_info.field}}</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">پست الکترونیک</h5>
+                                </div>
+                                <p class="mb-1">{{mentor_info.email}}</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">لینک شبکه اجتماعی</h5>
+                                </div>
+                                <p class="mb-1">{{mentor_info.social_media_link}}</p>
+                            </a>
+                            {% if mentor_info.phone_number %}
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">شماره تلفن</h5>
+                                </div>
+                                <p class="mb-1">{{mentor_info.phone_number}}</p>
+                            </a>
+                            {% endif %}
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">اطلاعات بیشتر</h5>
+                                </div>
+                                <p class="mb-1">{{mentor_info.extra_info}}</p>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button class="btn btn-secondary mx-1" data-dismiss="modal"
+                                id="no_button_edit_comment">لغو</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="delete_st_request_modal{{st_request.id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title ml-auto">حذف درخواست</h5>
+                        <div class="mr-auto">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <p>از درخواست خود برای حذف درخواست راهنمایی به {{st_request.user_to}} مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button data-id="{{st_request.id}}" data-action="delete_st_request"
+                                onclick="st_request_delete_st_request_managemnt(this)" class="btn btn-danger mx-1"
+                                id="button_delete_st_request">بلی</a>
+                                <button class="btn btn-secondary mx-1" data-dismiss="modal"
+                                    id="no_button_st_request">خیر</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<br>
+<br>
+<br>
+{% endblock content %}

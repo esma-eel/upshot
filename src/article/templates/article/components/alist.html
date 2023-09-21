@@ -1,0 +1,50 @@
+<div class="row my-5 justify-content-center">
+    {% for article in articles %}
+
+    <div class="col-md-4 p-3">
+        <div class="row media no-gutters text-center text-md-right align-items-center">
+            <div class=" col-xl-6 col-sm-12 "> <!-- col-sm-12-->
+                {% if article.picture %}
+                <a href="{{article.get_absolute_url}}">
+                <img src="{{article.picture.url}}" alt="{{article.title}} alt" width="270" height="230" class="img-thumbnail img-fluid">
+                {% else %}
+                <img src="https://via.placeholder.com/270x170/000000/FFFFFF/?text=َupshot"  width="270" height="230" class="img-thumbnail img-fluid">
+                </a>
+                {% endif %}
+            </div>
+            <div class="media-body col-xl-6  col-sm-12"> <!-- col-6-->
+                <a href="{{article.get_absolute_url}}"><h6 class="card-title my-3">{{article.title}}</h6></a>
+                </a>
+                {% if article.tags.exists %}
+                <p class="h6">
+                    {% for tag in article.tags.all %}
+                    <a href="{% url 'article:articles_list_by_tag' tag.name %}">
+                        {{tag.name}}
+                    </a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                {% endif %}
+                
+                <div class=""> <!--col-sm-12-->
+                    <div>  
+                        <div class="mx-2 card-text d-inline-block"><small>توسط <a href="{{article.author.get_absolute_url}}"
+                                    target="_blank">{{article.author}}</a></small></div>
+                    </div>
+                    <div class="card-text"><small>در تاریخ {{article.publish}}</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    {% endfor %}
+   <div class="col-md-4 p-3"></div>
+    <div class="col-md-4 p-3"></div>
+</div>
+
+{% include 'components/pagination/pagination.html' with page=articles params=params%}
+
+<br>
+<br>
+<br>

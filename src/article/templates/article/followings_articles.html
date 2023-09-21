@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+مقالات دنبال شوندگان
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-md-5">
+    {% include 'article/components/alist.html' with articles=articles %}
+</div>
+</div>
+{% endblock content %}

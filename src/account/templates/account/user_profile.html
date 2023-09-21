@@ -1,0 +1,118 @@
+{% extends 'base/base.html' %}
+{% block title %}
+صفحه {{user.username}}
+{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid pt-4">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    {% if profile.photo %}
+                    <img src="{{profile.photo.url}}" alt="{{user.username}}" class="d-block rounded-circle"
+                        width='200px' height='200px'>
+                    {% endif %}
+                    <h1 class="h5 my-3">{{user.first_name}} {{user.last_name}}</h1>
+                    <div>
+                        <h3 class="badge badge-primary p-3 mr-1">مقطع: {{profile.grade}}</h3>
+                        {% if user.mentorsetting.active == True %}
+                        <h3 class="badge badge-success p-3 mr-1">راهنما: فعال</h3>
+                        {% else %}
+                        <h3 class="badge badge-secondary p-3 mr-1">راهنما: غیرفعال</h3>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                        {% if request.user.id != user.id %}
+                        <h3 class="badge badge-info p-3 mr-1" id="follower_status_badge"> شمارا دنبال
+                            {% if request.user in user.following.all %}میکند{% else %}نمیکند{% endif %}</h3>
+                        <h3 class="badge badge-warning p-3 mr-1" id="follow_status_badge">دنبال
+                            {% if request.user in user.followers.all %}میکنید{% else %}نمیکنید{% endif %}</h3>
+                        <div class="btn-group mr-1">
+                            <button class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split p-2"
+                                data-toggle="dropdown">بیشتر</button>
+                            <div class="dropdown-menu">
+
+                                <a class="dropdown-item" href="\\" id="follow_unfollow_user" data-id="{{user.id}}"
+                                    data-action="{% if request.user in user.followers.all %}un{% endif %}follow_user"
+                                    onclick="follow_unfollow_user_function(this)">
+                                    {% if request.user not in user.followers.all %}
+                                    دنبال کردن
+                                    {% else %}
+                                    دنبال نکردن
+                                    {% endif %}
+                                </a>
+
+                                {% if request.user in user.following.all %}
+                                <a id="delete_from_follower_triger" href="\\" class="dropdown-item" data-toggle="modal"
+                                    data-target="#delete_follower_modal{{user.id}}">حذف از دنبال کنندگان</a>
+                                {% endif %}
+                                {% if user.mentorsetting.active == True %}
+                                    {% if user not in request.user.mentors.all %}
+                                    <a class="dropdown-item" href="\\"
+                                    id="send_mentor_request_button"
+                                    data-action="send_mentor_request"
+                                    data-id="{{user.id}}"
+                                    onclick="send_mentor_request_to_user_profile(this)">درخواست راهنمایی</a>
+                                    {% endif %}
+                                    <a class="dropdown-item {% if user not in request.user.mentors.all %} d-none {% endif %}" id="profile-manage-request-button" href="{% url 'sent_request_management' %}">مدیریت درخواست های ارسالی</a>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                        {% else %}
+                        <a class="h3 badge badge-warning p-3 mr-1" href="{% url 'profile_edit' %}"><i
+                                class="fas fa-user-cog"></i> ویرایش پروفایل</a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    <p class="mt-4">{% if profile.about %}
+                    درباره من : {{profile.about}}
+                    {% endif %}</p>
+                    {% if user.mentorsetting.active == True %}
+                    <div>
+                        <p>
+                            میتوانم به شما در {{user.mentorsetting.field}} کمک کنم
+                        </p>
+                        <p>
+                            توضیحات بیشتر:
+                            {{user.mentorsetting.extra_info}}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <row class="mt-4">
+        {% include 'article/components/alist.html' with articles=user_articles %}
+    </row>
+</div>
+
+<div class="modal fade" id="delete_follower_modal{{user.id}}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title ml-auto">حذف دنبال کننده</h5>
+                <div class="mr-auto">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p>از درخواست خود برای حذف {{user.username}} از دنبال کنندگان خود مطمئن هستید ؟</p>
+            </div>
+            <div class="modal-footer">
+                <div class="mx-auto">
+                    <button data-id="{{user.id}}" data-action="delete_follower" onclick="follower_delete_profile(this)"
+                        class="btn btn-danger mx-1" id="button_delete_follower">بلی</a>
+                        <button class="btn btn-secondary mx-1" data-dismiss="modal"
+                            id="no_button_delete_follower">خیر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

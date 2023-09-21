@@ -1,0 +1,39 @@
+<div class="owl-carousel owl-theme">
+    {% for article in articles %}
+    <div class="card">
+        <div class="card-header p-0">
+            {% if article.picture %}
+            <a href="{{article.get_absolute_url}}">
+            <img src="{{article.picture.url}}" alt="{{article.title}} alt" width="270" height="230"
+                class="img-fluid">
+            {% else %}
+            <img src="https://via.placeholder.com/1586x890/000000/FFFFFF/?text=upshot" width="270" height="230" class="img-fluid">
+            </a>
+            {% endif %}
+
+        </div>
+        <div class="card-body">
+            <a href="{{article.get_absolute_url}}"><h5 class="card-title my-3">{{article.title}}</h5></a>
+            {% if article.tags.exists %}
+            <p>
+                {% for tag in article.tags.all %}
+                <a href="{% url 'article:articles_list_by_tag' tag.name %}">
+                    {{tag.name}}
+                </a>
+                {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            <div class="">
+                <div>
+                    <div class="mx-2 card-text d-inline-block"><small>توسط <a href="{{article.author.get_absolute_url}}"
+                                target="_blank">{{article.author}}</a></small></div>
+                </div>
+                <div class="card-text"><small>در تاریخ {{article.publish}}</small></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+</div>

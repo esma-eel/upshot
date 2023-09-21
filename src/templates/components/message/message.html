@@ -1,0 +1,8 @@
+<ul class="list-unstyled" id="message_container">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }} alert-dismissible" {% endif %}>
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </li>
+    {% endfor %}
+</ul>

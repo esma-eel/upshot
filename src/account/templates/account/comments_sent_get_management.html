@@ -1,0 +1,110 @@
+{% extends 'account/dashboard_base.html' %}
+
+{% block title %} پیشخوان | مدیریت نظرات ارسالی {% endblock title %}
+{% block content %}
+<table class="table table-borderless table-hover my-table-management">
+    <thead>
+        <tr class="">
+            <th>#</th>
+            <th>توسط</th>
+            <th>نظر</th>
+            <th>مقاله</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+            <th>حذف</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comment in comments %}
+        <tr class="" id="comment_{{comment.id}}_row">
+            <td class="align-middle">{{forloop.counter}}</td>
+            <td class="align-middle"><a href="{{comment.user.get_absolute_url}}" target="_blank">{{comment.user}}</a></td>
+            <td class="align-middle" >
+                <a href="#!" id="comment_body_in_table{{comment.id}}"
+                    class="text-dark">{{comment.body|truncatewords:5}}</a>
+            </td>
+            <td>
+                <a href="{{comment.article.get_absolute_url}}" target="_blank"
+                    class="text-dark">{{comment.article.title}}</a>
+            </td>
+            <td class="align-middle">
+                <button data-active="{{comment.active}}" data-id="{{comment.id}}" data-action="change_active_status"  ondblclick="edit_comment_active_function(this)" class="btn p-2 badge {% if comment.active == True %} badge-success {% elif comment.active == False %} badge-danger{% endif %}">
+                {% if comment.active == True %} 
+                فعال 
+                {% elif comment.active == False %}
+                 غیرفعال
+                {% endif %}
+                </button>
+                
+            </td>
+            <td class="align-middle">
+                {% if comment.user == request.user %}
+                <button data-toggle="modal" data-target="#edit_comment_modal{{comment.id}}" class="btn btn-outline-secondary">ویرایش</button>
+                {% else %}
+                <button data-toggle="modal" data-target="#edit_comment_modal{{comment.id}}" class="btn btn-outline-warning">مشاهده</button>
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                <button data-toggle="modal" data-target="#delete_comment_modal{{comment.id}}" class="btn btn-outline-danger">حذف</button>
+            </td>
+        </tr>
+
+        <div class="modal fade" id="edit_comment_modal{{comment.id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title ml-auto">ویرایش نظر</h5>
+                        <div class="mr-auto">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="new_body" id="new_body{{comment.id}}" class="form-control w-100" rows="10"{% if comment.user == request.user %} {% else %} disabled {% endif %}>{{comment.body}}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button  data-id="{{comment.id}}" data-action="edit_comment_body" data-body="{{comment.body}}" onclick="edit_comment_body_function(this);" class="btn btn-danger mx-1"
+                                id="button_edit_comment" {% if comment.user == request.user %} {% else %} disabled {% endif %}>ویرایش</button>
+                            <button class="btn btn-secondary mx-1" data-dismiss="modal"
+                                id="no_button_edit_comment">لغو</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="delete_comment_modal{{comment.id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title ml-auto">حذف نظر</h5>
+                        <div class="mr-auto">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <p>از درخواست خود برای حذف "{{comment.body|truncatechars:10}}" از نظرات {% if request.user == comment.user %}ارسالی {% else %}دریافتی{% endif %} مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button data-id="{{comment.id}}" data-action="delete_comment"  onclick="comment_delete_comments_managemnt(this)" class="btn btn-danger mx-1"
+                                id="button_delete_comment">بلی</a>
+                            <button class="btn btn-secondary mx-1" data-dismiss="modal"
+                                id="no_button_delete_comment">خیر</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<br>
+<br>
+<br>
+{% endblock content %}

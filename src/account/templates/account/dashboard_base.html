@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %} {% endblock title %}</title>
+    <!-- fontawesome -->
+    <script src="{% static 'fonts/fontawesome/js/all.js' %}"></script>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}
+    {% endblock extra_css %}
+</head>
+
+<body class="text-right">
+
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-md navbar-light p-0">
+        <!-- place of button -->
+        <button class="navbar-toggler mr-auto ml-3 my-2 bg-light" data-toggle="collapse" data-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- place of button -->
+        <div class="collapse navbar-collapse" id="navbar">
+            <div class="container-fluid">
+                <div class="row mb-4">
+                    <!-- sidebar -->
+                    <div class="col-xl-2 col-lg-3 col-md-4 sidebar fixed-top">
+                        {% comment %} edit this later {% endcomment %}
+                        <a href="{% url 'dashboard' %}"
+                            class="navbar-brand text-white d-block text-center mx-auto py-3 mb-2 bottom-border">پیشخوان
+                            سامانه</a>
+                        <ul class="navbar-nav flex-column p-0 accordion" id="navbar-accordion-parent">
+                            {% if request.user.is_staff and request.user.is_superuser %}
+                                <li class="nav-item bottom-border">
+                                <a href="/admin/"
+                                    class="nav-link p-2 mb-2 sidebar-link  sidebar-current"><i
+                                        class="fas fa-tachometer ml-2 "></i> مدیریت کل</a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item bottom-border">
+                                <a href="{% url 'dashboard' %}"
+                                    class="nav-link p-2 mb-2 sidebar-link  sidebar-current"><i
+                                        class="fas fa-tachometer-alt ml-2 "></i> پیشخوان</a>
+                            </li>
+                            <li class="nav-item bottom-border">
+                                <a href="#" class="my-hover-acc nav-link p-2 mb-2 sidebar-link" data-toggle="collapse"
+                                    data-target="#user-info-edit"><i class="fas fa-user-cog ml-2"></i> مدیریت حساب</a>
+                                <div id="user-info-edit" class="collapse bg-white rounded-lg p-3 {% if section == "profile" %} show {% endif %}"
+                                    data-parent="#navbar-accordion-parent">
+                                    <ul class="navbar-nav flex-column p-0">
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a
+                                                href="{% url 'password_change' %}" class="nav-link text-dark ">تغییر
+                                                شناسه عبور</a></li>
+
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a
+                                                href="{% url 'profile_edit' %}" class="nav-link text-dark ">تغییر
+                                                اطلاعات حساب</a></li>
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a
+                                                href="{% url 'mentor_setting' %}" class="nav-link text-dark ">تنظیمات راهنما</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item bottom-border">
+                                <a href="#" class="my-hover-acc nav-link p-2 mb-2 sidebar-link" data-toggle="collapse"
+                                    data-target="#articles"><i class="fas fa-edit ml-2"></i>
+                                    مدیریت مقالات</a>
+                                <div id="articles" class="collapse bg-white rounded-lg p-3 {% if section == "article" %} show {% endif %}"
+                                    data-parent="#navbar-accordion-parent">
+                                    <ul class="navbar-nav flex-column p-0">
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'create_article' %}"
+                                                class="nav-link text-dark ">مقاله جدید</a></li>
+
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'articles_management' %}"
+                                                class="nav-link text-dark ">لیست مقالات</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item bottom-border">
+                                <a href="#" class="my-hover-acc nav-link p-2 mb-2 sidebar-link" data-toggle="collapse"
+                                    data-target="#mentoring"><i class="fas fa-map-signs ml-2"></i>
+                                    مدیریت درخواست ها</a>
+                                <div id="mentoring" class="collapse bg-white rounded-lg p-3 mb-3 {% if section == "guide" %} show {% endif %}"
+                                    data-parent="#navbar-accordion-parent">
+                                    <ul class="navbar-nav flex-column p-0">
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="/search/?query=&search=search_guide"
+                                                class="nav-link text-dark ">ارسال درخواست</a></li>
+
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'sent_request_management' %}"
+                                                class="nav-link text-dark ">درخواست های من</a></li>
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'inbox_request_management' %}"
+                                                class="nav-link text-dark ">درخواست های دریافتی</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item bottom-border">
+                                <a href="#" class="my-hover-acc nav-link p-2 mb-2 sidebar-link" data-toggle="collapse"
+                                    data-target="#contactmanagement"><i class="fas fa-chart-network ml-2"></i>
+                                    مدیریت همراهان</a>
+                                <div id="contactmanagement" class="collapse bg-white rounded-lg p-3 mb-3 {% if section == "follower_following" %} show {% endif %}"
+                                    data-parent="#navbar-accordion-parent">
+                                    <ul class="navbar-nav flex-column p-0">
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'followings_management' %}"
+                                                class="nav-link text-dark ">دنبال شوندگان</a></li>
+
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'followers_management' %}"
+                                                class="nav-link text-dark ">دنبال کنندگان</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li class="nav-item ">
+                                <a href="#" class="my-hover-acc nav-link p-2 mb-2 sidebar-link" data-toggle="collapse"
+                                    data-target="#commentmanagement"><i class="fas fa-comments-alt ml-2"></i>
+                                    مدیریت نظرات</a>
+                                <div id="commentmanagement" class="collapse bg-white rounded-lg p-3 mb-3 {% if section == "comment" %} show {% endif %}"
+                                    data-parent="#navbar-accordion-parent">
+                                    <ul class="navbar-nav flex-column p-0">
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'sent_comments_management' %}"
+                                                class="nav-link text-dark ">نظرات ارسالی</a></li>
+
+                                        <li class="nav-item sidebar-subitem w-100 rounded-lg"><a href="{% url 'get_comments_management' %}"
+                                                class="nav-link text-dark ">نظرات دریافتی</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /sidebar -->
+                    <!-- topnav -->
+                    <div class="col-xl-10 col-lg-9 col-md-8 mr-auto bg-white fixed-top py-2 top-navbar shadow-sm">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-md-9">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                    <a class="nav-link font-weight-bold" href="{% url 'home' %}">
+                                        <img src="{% static 'img/upshot_logo.png' %}" alt="upshot">
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    
+                                    <a href="{% url 'home' %}" class="nav-link {% if section == "home" %}active{% endif %}">
+                                        صفحه نخست
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    
+                                    <a href="{% url 'search_objects' %}" class="nav-link {% if section == "search" %}active{% endif %}">
+                                        جستجو
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'article:articles_list' %}" class="nav-link {% if section == "articles" %}active{% endif %}">
+                                        مقالات
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/search/?query=&search=search_guide" class="nav-link {% if section == "guide_request" %}active{% endif %}">
+                                        درخواست راهنمایی
+                                    </a>
+                                </li>
+                                </ul>
+                            </div>
+                            <div class="col-xl-2 col-lg-3 col-md-3">
+                                <div class="d-none d-md-block">
+
+                                    <div class="dropdown">
+                                        <a href="#!" class="dropdwon-toggle text-decoration-none text-dark" data-toggle="dropdown"
+                                            data-target="notification-dropdown">
+                                            {% if request.user.profile.photo %}
+                                            <img src="{{request.user.profile.photo.url}}" alt="" width="50" height="50"
+                                                class="rounded-circle">
+                                            {% endif %}
+                                            {% if request.user.first_name and request.user.last_name %}
+                                            <span class="mr-2">{{request.user.first_name}}</span>
+                                            {% else %}
+                                            <span class="mr-2">{{request.user.username}}</span>
+                                            {% endif %}
+                                        </a>
+                                        <div class="dropdown-menu text-right p-2 mt-2" id="notification-dropdown">
+                                            <a href="{{request.user.get_absolute_url}}" class="dropdown-item">
+                                                <i class="fal fa-user ml-2"></i>
+                                                صفحه من
+                                            </a>
+                                            <a href="{% url 'profile_edit' %}" class="dropdown-item">
+                                                <i class="fal fa-user-cog ml-2"></i>
+                                                ویرایش حساب
+                                            </a>
+                                            <a class="dropdown-item" href="{% url 'logout' %}"><i
+                                                    class="fal fa-sign-out ml-2"></i>
+                                                خروج
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="little-menu d-md-none text-right p-2 mt-2" id="notification-dropdown">
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fal fa-user ml-2"></i>
+                                        صفحه من
+                                    </a>
+                                    <a href="{% url 'profile_edit' %}" class="dropdown-item">
+                                        <i class="fal fa-user-cog ml-2"></i>
+                                        ویرایش حساب
+                                    </a>
+                                    <a class="dropdown-item" href="#"><i class="fal fa-sign-out ml-2"></i>
+                                        خروج
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /topnav -->
+                </div>
+            </div>
+        </div>
+
+    </nav>
+    <!-- /navbar -->
+
+    <!-- contents -->
+    <section class="mt-md-5 pt-3">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-10 col-lg-9 col-md-8 mr-auto">
+                    <div class="row">
+                        <div class="col">
+                            {% include "components/message/message.html" %}
+                            {% block content %}
+                            <h1>شروع از اینجا</h1>
+                            {% endblock content %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- contents  -->
+
+    <!--javascript-->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}">
+    </script>
+    <script src="{% static 'js/datatables.min.js' %}">
+    </script>
+    <script src="{% static 'js/popper.min.js' %}">
+    </script>
+    <script src="{% static 'js/bootstrap.min.js' %}">
+    </script>
+    <script src="{% static 'js/dataTables.bootstrap4.min.js' %}">
+    </script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
+
+</body>
+
+</html>

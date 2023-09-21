@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %} {% endblock title %}</title>
+    <!-- fontawesome -->
+    <script src="{% static 'fonts/fontawesome/js/all.js' %}"></script>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}
+    {% endblock extra_css %}
+</head>
+
+<body class="mt-blue">
+
+    <section class="container text-right">
+        <div class="row justify-content-center p-4 pt-5">
+            <div class="col-xl-10 col-lg-12 col-md-9 o-hidden bg-white rounded">
+                <div class="row">
+                    <div class="col-lg-6 col-xs-10 mx-sm-auto">
+                        <!-- title -->
+                        <div class="my-5 text-center">
+                            <!--messages-->
+                            {% if messages %}
+                            {% include "components/message/message.html" %}
+                            {% endif %}
+                            <!--/messages-->
+                            <!--errors-->
+                            {% if form.errors %}
+                            {% for key, val in form.errors.items %}
+                            {% for error_text in val %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>خطا!</strong> {{error_text}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                            {% endfor %}
+                            {% endif %}
+                            {% if next %}
+                            {% if request.user.is_authenticated %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>هشدار!</strong> این حساب کاربری، دسترسی به این بخش را ندارد
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>هشدار!</strong> برای دسترسی به این بخش لطفا وارد حساب کاربری خود شوید
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            <!--/errors-->
+                            {% block form_title %}
+                            {% endblock form_title %}
+                        </div>
+                        <!-- /title -->
+                        {% block content %}{% endblock content %}
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block p-0">
+                        {% block form_side_image %}{% endblock form_side_image %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--javascript-->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}">
+    </script>
+    <script src="{% static 'js/popper.min.js' %}">
+    </script>
+    <script src="{% static 'js/bootstrap.min.js' %}">
+    </script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
+
+</body>
+
+</html>

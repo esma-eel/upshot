@@ -1,0 +1,120 @@
+{% load static %}
+<nav class="navbar navbar-expand-md navbar-light p-0">
+    <button class="navbar-toggler mr-auto ml-3 my-2 bg-light" type="button" data-toggle="collapse"
+        data-target="#mainnavbar" aria-controls="mainnavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainnavbar">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-md-12 top-navbar fixed-top py-2 bg-white shadow-sm">
+                    <div class="row justify-content-around align-items-center">
+                        <div class="col-md-7">
+                            <ul class="navbar-nav pr-md-0">
+                                <li class="nav-item">
+                                    <a class="nav-link font-weight-bold" href="{% url 'home' %}">
+                                        <img src="{% static 'img/upshot_logo.png' %}" alt="upshot">
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    
+                                    <a href="{% url 'home' %}" class="nav-link {% if section == "home" %}active{% endif %}">
+                                        صفحه نخست
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    
+                                    <a href="{% url 'search_objects' %}" class="nav-link {% if section == "search" %}active{% endif %}">
+                                        جستجو
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'article:articles_list' %}" class="nav-link {% if section == "articles" %}active{% endif %}">
+                                        مقالات
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/search/?query=&search=search_guide" class="nav-link {% if section == "guide_request" %}active{% endif %}">
+                                        درخواست راهنمایی
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-4 d-flex justify-content-md-end">
+                            <ul class="navbar-nav">
+                                {% if request.user.is_authenticated %}
+                                <li class="nav-item">
+                                    <div class="d-none d-md-block">
+
+                                        <div class="dropdown">
+                                            <a href="#!" class="dropdwon-toggle text-decoration-none text-dark"
+                                                data-toggle="dropdown" data-target="notification-dropdown">
+                                                {% if request.user.profile.photo %}
+                                                <img src="{{request.user.profile.photo.url}}" alt="" width="50"
+                                                    height="50" class="rounded-circle">
+                                                {% endif %}
+                                                {% if request.user.first_name and request.user.last_name %}
+                                                <span class="mr-2">{{request.user.first_name}}</span>
+                                                {% else %}
+                                                <span class="mr-2">{{request.user.username}}</span>
+                                                {% endif %}
+                                            </a>
+                                            <div class="dropdown-menu text-right p-2 mt-2" id="notification-dropdown">
+                                                <a class="dropdown-item" href="{% url 'dashboard' %}">
+                                                    <i class="fal fa-tachometer"></i>
+                                                    پیشخوان
+                                                </a>
+                                                <a href="{{request.user.get_absolute_url}}" class="dropdown-item">
+                                                    <i class="fal fa-user ml-2"></i>
+                                                    صفحه من
+                                                </a>
+                                                <a href="{% url 'profile_edit' %}" class="dropdown-item">
+                                                    <i class="fal fa-user-cog ml-2"></i>
+                                                    ویرایش حساب
+                                                </a>
+                                                <a class="dropdown-item" href="{% url 'logout' %}"><i
+                                                        class="fal fa-sign-out ml-2"></i>
+                                                    خروج
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="little-menu d-md-none text-right mt-2" id="notification-dropdown">
+                                        <a class="dropdown-item pr-0" href="{% url 'dashboard' %}">
+                                            <i class="fal fa-tachometer"></i>
+                                            پیشخوان
+                                        </a>
+                                        <a href="#" class="dropdown-item pr-0">
+                                            <i class="fal fa-user ml-2"></i>
+                                            صفحه من
+                                        </a>
+                                        <a href="{% url 'profile_edit' %}" class="dropdown-item pr-0">
+                                            <i class="fal fa-user-cog ml-2"></i>
+                                            ویرایش حساب
+                                        </a>
+                                        <a class="dropdown-item pr-0" href="#"><i class="fal fa-sign-out ml-2"></i>
+                                            خروج
+                                        </a>
+                                    </div>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">
+                                        ورود
+                                    </a>
+                                </li>
+                                <li class="nav-item"><a href="{% url 'register' %}" class="nav-link">
+                                        ثبت نام
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

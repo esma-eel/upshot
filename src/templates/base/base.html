@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %} {% endblock title %}</title>
+    <!-- fontawesome -->
+    <script src="{% static 'fonts/fontawesome/js/all.js' %}"></script>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}
+    {% endblock extra_css %}
+</head>
+
+<body class="text-right">
+    {% include 'components/navbar/navbar.html' %}
+
+    <div class="container-fluid text-right" style="direction: rtl !important;">
+        <section class="mt-5">
+            {% include 'components/message/message.html' %}
+            {% block content %}
+                <p>اگر این را میبینید یعنی اینجا هیچ محتوایی قرار نگرفته است</p>
+            {% endblock content %}
+        </section>
+    </div>
+
+    <!--javascript-->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}">
+    </script>
+    <script src="{% static 'js/popper.min.js' %}">
+    </script>
+    <script src="{% static 'js/bootstrap.min.js' %}">
+    </script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
+
+</body>
+
+</html>

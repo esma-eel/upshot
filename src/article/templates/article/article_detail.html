@@ -1,0 +1,143 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+{{article.title}}
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col p-0 m-0">
+
+            <div style="{% if article.picture %} background-image: url({{article.picture.url}});{% endif %}"
+                class="article-detail-header d-flex flex-column justify-content-center align-items-center ">
+                <h1 class="text-white p-3">{{article.title}}</h1>
+
+                <div class="d-flex justify-content-around flex-md-row flex-column align-items-center">
+                    <div>
+                        <h2 class="mx-2 card-text d-inline-block  text-white"><small>توسط <a
+                                    href="{{article.author.get_absolute_url}}"
+                                    target="_blank">{{article.author}}</a></small></h2>
+                    </div>
+                    <h3 class=" text-white"><small>در تاریخ {{article.publish}}</small></h3>
+                </div>
+            </div>
+
+            <div class="container py-5 my-5 word-break" id="article_body_container">
+                {{article.body|safe}}
+                
+                <div class="mt-5 mb-2 pt-5 d-flex justify-content-between">
+                    {% if article.tags.exists %}
+                    <p> برچسب ها:
+                        {% for tag in article.tags.all %}
+                        <a href="{% url 'article:articles_list_by_tag' tag.name %}">
+                            {{tag.name}}
+                        </a>
+                        {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                    <ul class="list-unstyled list-inline">
+                        <li class="list-inline-item mx-1">
+                            {% with total_negative_votes=article.users_negative_vote.count users_voted_negative=article.users_negative_vote.all%}
+
+                            <a id="vote-neg-holder" href="#!" {% if request.user in users_voted_negative %}
+                                data-user-already-voted-neg=true {% else %} data-user-already-voted-neg=false
+                                {% endif %} data-action="negative_vote" data-id="{{article.id}}" class="text-danger"
+                                data-toggle="tooltip" data-placement="top" title="بد"
+                                onclick="user_voting_function(this, event)">
+                                <i class="far fa-thumbs-down"></i>
+                                <span class="negative-counter">{{total_negative_votes}}</span>
+                            </a>
+                            {% endwith %}
+                        </li>
+                        <li class="list-inline-item mx-1">
+                            {% with total_positive_votes=article.users_positive_vote.count users_voted_positive=article.users_positive_vote.all %}
+                            <a id="vote-pos-holder" href="#!" {% if request.user in users_voted_positive %}
+                                data-user-already-voted-pos=true {% else %} data-user-already-voted-pos=false
+                                {% endif %} data-action="positive_vote" data-id="{{article.id}}" class="text-success"
+                                data-toggle="tooltip" data-placement="top" title="خوب"
+                                onclick="user_voting_function(this, event)">
+                                <i class="far fa-thumbs-up "></i>
+                                <span class="positive-counter">{{total_positive_votes}}</span>
+                            </a>
+                            {% endwith %}
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+
+
+                <hr>
+                {% with comments.count as total_comments %}
+                <h3 class="h5">مجموع نظر ها {{total_comments}}</h3>
+                {% endwith %}
+
+                {% if request.user.is_authenticated %}
+                <form method="POST" action="{{article.get_absolute_url}}">
+                    {% csrf_token %}
+
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <div class="media my-3">
+                                {% if request.user.profile.photo %}
+                                <img class="align-self-center" src="{{request.user.profile.photo.url}}"
+                                    alt="{{request.user.username}}" width=50 height=50>
+                                {% endif %}
+                                <div class="media-body mx-4 align-self-center">
+                                    <h5 class="mt-0 mb-1">
+                                        <a href="{{request.user.get_absolute_url}}" target="_blank">
+                                            {% if request.user.first_name and request.user.last_name %}
+                                            {{request.user.first_name}} {{request.user.last_name}}
+                                            {% else %}
+                                            {{request.user.username}}
+                                            {% endif %}
+                                        </a>
+                                    </h5>
+                                </div>
+                            </div>
+
+                            {{comment_form.as_p}}
+
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill btn-lg">ارسال</button>
+
+                        </div>
+                    </div>
+                </form>
+                {% else %}
+                <p>شما باید برای ارسال نظر <a href="{% url 'login' %}">وارد</a> سیستم شوید</p>
+                {% endif %}
+
+                <ul class="list-unstyled">
+                    {% for comment in comments %}
+                    <li class="media my-4">
+                        {% if comment.user.profile.photo %}
+                        <img class="align-self-center" src="{{comment.user.profile.photo.url}}"
+                            alt="{{comment.user.username}}" width=50 height=50>
+                        {% endif %}
+                        <div class="media-body mx-4">
+                            <h5 class="mt-0 mb-1">
+                                <a href="{{comment.user.get_absolute_url}}" target="_blank">
+                                    {% if comment.user.first_name and comment.user.last_name %}
+                                    {{comment.user.first_name}} {{comment.user.last_name}}
+                                    {% else %}
+                                    {{comment.user.username}}
+                                    {% endif %}
+                                </a>
+                            </h5>
+                            <p>{{comment.body|safe}}</p>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="my-4">
+                        <p>برای این مقاله هنوز نظری ارسال نشده است</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

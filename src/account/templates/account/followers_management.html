@@ -1,0 +1,63 @@
+{% extends 'account/dashboard_base.html' %}
+
+{% block title %} پیشخوان | مدیریت دنبال کنندگان {% endblock title %}
+{% block content %}
+<table class="table table-borderless table-hover my-table-management">
+    <thead>
+        <tr class="">
+            <th>#</th>
+            <th>کاربر</th>
+            <th>عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for follower in followers %}
+        <tr class="" id="follower_{{follower.id}}_row">
+            <td class="align-middle">{{forloop.counter}}</td>
+            <td class="align-middle">
+                {% if follower.profile.photo %}
+                <img src="{{follower.profile.photo.url}}" alt="{{follower.username}}" class="rounded-circle" width=50
+                    height=50>
+                {% endif %}
+                <a href="{{follower.get_absolute_url}}" target="_blank"
+                    class="{% if follower.profile.photo %}mr-3{% endif %} text-dark">{% if follower.first_name and follower.last_name %}{{follwer.first_name}}
+                    {{follower.last_name}}{% else %}{{follower.username}}{% endif %}</a>
+            </td>
+            <td class="align-middle">
+                <button data-toggle="modal" data-target="#delete_follower_modal{{follower.id}}" class="btn btn-outline-danger">حذف</button>
+            </td>
+        </tr>
+
+        <div class="modal fade" id="delete_follower_modal{{follower.id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title ml-auto">حذف دنبال کننده</h5>
+                        <div class="mr-auto">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <p>از درخواست خود برای حذف {{follower.username}} از دنبال کنندگان خود مطمئن هستید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button data-id="{{follower.id}}" data-action="delete_follower"  onclick="follower_delete_followers_managemnt(this)"  class="btn btn-danger mx-1"
+                                id="button_delete_follower">بلی</button>
+                            <button class="btn btn-secondary mx-1" data-dismiss="modal"
+                                id="no_button_delete_follower">خیر</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<br>
+<br>
+<br>
+{% endblock content %}

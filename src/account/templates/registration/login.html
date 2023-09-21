@@ -1,0 +1,35 @@
+{% extends "account/account_base.html" %}
+{% load static %}
+{% block title %}ورود به سامانه{% endblock title %}
+{% block form_title %}
+<h1 class="h4">خوش آمدید</h1>
+{% endblock form_title %}
+
+{% block content %}
+<div class="row mx-4">
+    <div class="col">
+        <form action="." method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <input type="{{field.field.widget.input_type}}" name="{{ field.name }}" class="form-control rounded-pill p-4 text-center text-muted" id="{{ field.auto_id }}" placeholder="{% if field.label == 'نام کاربری' %}شناسه کاربری{% elif field.label == 'گذرواژه' %}شناسه عبور{% endif %}" required>
+            </div>
+            {% endfor %}
+            <button type="submit" class="my-5 btn btn-primary btn-block rounded-pill btn-lg">ورود</button>
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+        <hr>
+        <div class="text-center text-small my-2">
+            <a href="{% url 'password_reset' %}">شناسه عبور فراموش شده</a>
+        </div>
+        <div class="text-center my-2">
+            <a href="{% url 'register' %}">ایجاد حساب کاربری جدید</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block form_side_image %}
+<img src="{% static 'img/upshot_universe.png' %}" alt="" class="img-fluid h-100">
+{% endblock form_side_image %}

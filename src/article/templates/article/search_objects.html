@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+جستجو
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-md-1">
+    <section class="my-5">
+        {% include 'article/components/search.html' with query=query %}
+    </section>
+    {% if query %}
+        {% if resutls_model == 'article' or resutls_model == 'tag'%}
+            {% if resutls_model == 'tag' %}
+                <h3 class="text-center">نتایج جستجوی برچسب :  "{{query}}"</h3>
+            {% else %}
+                <h3 class="text-center">نتایج جستجوی مقاله :  "{{query}}"</h3>
+            {% endif %}
+            
+        {% endif %}
+
+        {% if resutls_model == 'user'%}
+            <h3 class="text-center">نتایج جستجوی کاربر :  "{{query}}"</h3>
+        {% endif %}
+
+    {% endif %}
+    
+    {% if resutls_model == 'article' or resutls_model == 'tag'%}
+        {% include 'article/components/alist.html' with articles=results params=params %}
+    {% endif %}
+    {% if resutls_model == 'user'%}
+        {% include 'article/components/ulist.html' with users=results params=params %}
+    {% endif %}
+</div>
+</div>
+{% endblock content %}

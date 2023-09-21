@@ -1,0 +1,75 @@
+<div class="row my-5 justify-content-center">
+    {% for user in users %}
+
+    <div class=" col-md-4 p-3">
+        <div class="row media no-gutters text-center align-items-center">
+            <div class="col-xl-6 col-sm-12">
+                {% if user.profile.photo %}
+                <img src="{{user.profile.photo.url}}" alt="{{user.username}} alt" width="180" height="180"
+                    class="rounded-circle">
+                {% else %}
+                <img src="https://via.placeholder.com/180x180/000000/FFFFFF/?text=َupshot" class="rounded-circle" width="180" height="180">
+                {% endif %}
+
+            </div>
+            <div class="media-body col-xl-4 col-sm-12 text-lg-right">
+                <h5 class=" my-3"><a href="{{user.get_absolute_url}}">{{user}}</a></h5>
+                {% if user.mentorsetting.active == True %}
+                <small class="badge badge-success p-1 mr-1">راهنما:‌فعال</small>
+                {% else %}
+                <small class="badge badge-secondary p-1 mr-1">راهنما:غیرفعال</small>
+                {% endif %}
+                <br>
+                <small class="badge badge-primary p-1 mr-1">مقطع: {% if user.profile.grade %}{{user.profile.get_grade_display}}{% else %}نامعلوم{% endif %}</small>
+                <br>
+                {% if request.user.is_authenticated %}
+                {% if user != request.user %}
+                <a href="\\" 
+                    id="follow_unfollow_user" 
+                    data-id="{{user.id}}"
+                    data-action="{% if request.user in user.followers.all %}un{% endif %}follow_user"
+                    onclick="follow_unfollow_user_function(this)"
+                    class="badge btn-outline-secondary btn-sm border"
+                    >
+                    {% if request.user not in user.followers.all %}
+                    دنبال کردن
+                    {% else %}
+                    دنبال نکردن
+                    {% endif %}
+                </a>
+                {% endif %}
+                {% if user.mentorsetting.active == True and user != request.user %}
+                <a href="\\" 
+                    id="send_request_to_user_button_list" 
+                    data-id="{{user.id}}"
+                    data-action="send_mentor_request"
+                    {% if request.user not in user.mentor.all %}
+                    onclick="send_mentor_request_to_user(this)"
+                    {% endif %}
+                    class="badge btn-outline-secondary btn-sm border"
+                    >
+                    {% if request.user not in user.mentor.all %}
+                    درخواست راهنمایی
+                    {% else %}
+                    درخواست ارسال شده
+                    {% endif %}
+                </a>
+                {% endif %}
+                <br><br>
+                {% endif %}
+                <p>{{user.profile.about}}</p>
+            </div>
+        </div>
+    </div>
+
+
+    {% endfor %}
+    <div class="col-md-4 p-3"></div>
+    <div class="col-md-4 p-3"></div>
+</div>
+
+{% include 'components/pagination/pagination.html' with page=users params=params %}
+
+<br>
+<br>
+<br>

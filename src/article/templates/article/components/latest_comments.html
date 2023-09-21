@@ -1,0 +1,32 @@
+<div class="owl-carousel owl-theme carousel-comments">
+    {% for comment in latest_comments %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <div class="my-2 text-center">
+            
+            <h5 class="text-muted mt-3">
+                {% if comment.user.first_name and comment.user.last_name %}
+                {{comment.user.first_name}} {{comment.user.last_name}}
+                {% else %}
+                {{comment.user.username}}
+                {% endif %}
+            </h5>
+            
+        </div>
+        <div>
+            <blockquote class="blockquote text-center">
+                <p class="mb-0 word-break">
+                "
+                {{comment.body|truncatechars:20}}
+                "
+                </p>
+                <footer class="blockquote-footer">{{comment.created|timesince}} قبل
+                <a href="{{comment.article.get_absolute_url}}">
+                <small>روی مقاله {{comment.article.title|truncatewords:5}}</small>
+            </a>
+                </footer>
+            </blockquote>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
