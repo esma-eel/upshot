@@ -16,6 +16,7 @@ class SearchForm(forms.Form):
     """
     Search 'query' field between the type selected in 'search' field
     """
+
     query = forms.CharField(
         max_length=255,
         required=False,
