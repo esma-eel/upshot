@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class MentorConfig(AppConfig):
-    name = 'mentor'
+    name = "mentor"
+    default_auto_field = "django.db.models.BigAutoField"
