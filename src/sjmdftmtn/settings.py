@@ -14,6 +14,7 @@ import os
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# this is address of src or main project directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = True
@@ -33,9 +34,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third party
     "ckeditor",
-    "article.apps.ArticleConfig",
     "taggit",
+    # upshot
+    "article.apps.ArticleConfig",
     "actions.apps.ActionsConfig",
     "mentor.apps.MentorConfig",
 ]
@@ -87,16 +90,25 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation"
+            ".UserAttributeSimilarityValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.NumericPasswordValidator"
+        )
     },
 ]
 
@@ -136,25 +148,28 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 
-# account
-# account
+# account app
 LOGIN_URL = "login"
 LOGOUT_URL = "logout"
+# if user followed someone
 LOGIN_REDIRECT_URL = "article:followings_articles"
 LOGOUT_REDIRECT_URL = "login"
-# user absolute url
+# user absolute url, users profile
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda user: reverse_lazy("user_profile", args=[user.username])
 }
-# slug settings
+
+# slug settings for unicode
 ALLOW_UNICODE_SLUGS = True
 ALLOW_UNICODE = True
 
-
+# IDK if this works but found in github issues section of ckeditor
 CKEDITOR_CONFIGS = {"default": {"versionCheck": False}}
 
 # local settings ;)
+# this must be changed later
+# some settings in local dev may get changed here
 try:
-    from .local_settings import *
+    from .local_settings import *  # noqa
 except ImportError:
     pass
