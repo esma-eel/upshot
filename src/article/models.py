@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.text import slugify
 from taggit.managers import TaggableManager
 
 
@@ -49,10 +48,7 @@ class Article(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        slug_title = slugify(self.title, allow_unicode=True)
-        url = None
-        if slug_title == self.slug:
-            url = reverse("article:article_detail", args=[slug_title])
+        url = reverse("article:article_detail", args=[self.slug])
         return url
 
 

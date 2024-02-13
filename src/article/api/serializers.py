@@ -27,7 +27,17 @@ class ArticleModelSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 
 class CommentModelSerializer(serializers.ModelSerializer):
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+        if self.instance:
+            # update
+            for create_only_field in self.Meta.create_only_fields:
+                if create_only_field in data.keys():
+                    data.pop(create_only_field)
+        return data
+
     class Meta:
         model = Comment
-        exlcude = []
-        read_only_fields = ["created", "updated", "active"]
+        exclude = []
+        read_only_fields = ["created", "updated", "user"]
+        create_only_fields = ["article"]

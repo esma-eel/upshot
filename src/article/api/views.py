@@ -113,7 +113,19 @@ class ArticleModelViewSet(ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(fls_queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, staus=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["get"], url_path="comments")
+    def get_comments_list(self, request, *args, **kwargs):
+        article_object = self.get_object()
+        comments = article_object.comments.filter(active=True)
+        page = self.paginate_queryset(comments)
+        if page is not None:
+            comment_serializer = CommentModelSerializer(page, many=True)
+            return self.get_paginated_response(comment_serializer.data)
+
+        comment_serializer = CommentModelSerializer(comments, many=True)
+        return Response(comment_serializer.data, status=status.HTTP_200_OK)
 
     # /end
 
@@ -121,5 +133,9 @@ class ArticleModelViewSet(ModelViewSet):
 class CommentModelViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentModelSerializer
-    permission_classes = []
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filterset_class = CommentFilterSet
+
+    def perform_create(self, serializer):
+        comment_object = serializer.save(user=self.request.user)
+        return comment_object
