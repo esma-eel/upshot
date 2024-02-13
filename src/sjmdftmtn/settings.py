@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # third party
+    "rest_framework",
+    "django_filters",
     "ckeditor",
     "taggit",
     # upshot
@@ -165,6 +167,14 @@ ALLOW_UNICODE = True
 
 # IDK if this works but found in github issues section of ckeditor
 CKEDITOR_CONFIGS = {"default": {"versionCheck": False}}
+
+# rest framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
 
 # local settings ;)
 # this must be changed later

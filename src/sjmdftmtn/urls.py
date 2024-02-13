@@ -5,10 +5,14 @@ from django.conf.urls.static import static
 from article.views import home_view, search_objects
 
 urlpatterns = [
+    # mtv
     path("admin/", admin.site.urls),
     path("account/", include("account.urls")),
     path("article/", include("article.urls", namespace="article")),
     path("search/", search_objects, name="search_objects"),
+    # api
+    path("api/article/", include("article.api.urls", namespace="api-article")),
+    # home
     path("", home_view, name="home"),
 ]
 
