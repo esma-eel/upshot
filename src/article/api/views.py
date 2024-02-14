@@ -131,6 +131,13 @@ class ArticleModelViewSet(ModelViewSet):
 
 
 class CommentModelViewSet(ModelViewSet):
+    http_method_names = [
+        "get",
+        "post",
+        "patch",
+        "delete",
+    ]
+
     queryset = Comment.objects.all()
     serializer_class = CommentModelSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]

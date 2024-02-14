@@ -12,6 +12,7 @@ urlpatterns = [
     path("search/", search_objects, name="search_objects"),
     # api
     path("api/article/", include("article.api.urls", namespace="api-article")),
+    path("api/mentor/", include("mentor.api.urls", namespace="api-mentor")),
     # home
     path("", home_view, name="home"),
 ]

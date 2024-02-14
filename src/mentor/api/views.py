@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from mentor.models import MentorSetting, MentorRequest
 from .serializers import (
     MentorSettingModelSerializer,
@@ -10,20 +11,41 @@ from .filters import MentorSettingFilterSet, MentorRequestFilterSet
 
 
 class MentorSettingModelViewSet(ModelViewSet):
+
+    http_method_names = [
+        "get",
+        "post",
+        "patch",
+    ]
+
     queryset = MentorSetting.objects.all()
     serializer_class = MentorSettingModelSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     filterset_class = MentorSettingFilterSet
 
+    lookup_field = "user__username"
+    lookup_url_kwarg = "user__username"
+
     def perform_create(self, serializer):
-        mentor_setting_object = serializer.save(user=self.request.user)
-        return mentor_setting_object
+        user = self.request.user
+        try:
+            return user.mentorsetting
+        except MentorSetting.DoesNotExist:
+            mentor_setting_object = serializer.save(user=user)
+            return mentor_setting_object
 
 
 class MentorRequestModelViewSet(ModelViewSet):
+    http_method_names = [
+        "get",
+        "post",
+        "patch",
+        "delete",
+    ]
+
     queryset = MentorRequest.objects.all().order_by("-created")
     serializer_class = MentorRequestModelSerializer
-    permission_classes = [IsSenderOrReceiverOfMentorRequest]
+    permission_classes = [IsAuthenticated, IsSenderOrReceiverOfMentorRequest]
     filterset_class = MentorRequestFilterSet
 
     def get_queryset(self):
@@ -36,10 +58,20 @@ class MentorRequestModelViewSet(ModelViewSet):
         mentor_request_object = serializer.save(user_from=self.request.user)
         return mentor_request_object
 
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        user = self.request.user
+        if user == instance.user_to:
+            mentor_request_object = serializer.save()
+            return mentor_request_object
+        return None
+
     def perform_destroy(self, instance):
         user = self.request.user
+        instance.approved = False
+        instance.save()
+
         if user == instance.user_from:
             instance.delete()
 
-        instance.approved = False
-        instance.save()
+        return None
