@@ -5,7 +5,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.core.validators import ValidationError
 
-from .models import Profile
+from upshot.profiles.models import Profile
 
 GRADE_CHOICES = (("assistant", "کاردانی"), ("bachelor", "کارشناسی"))
 
