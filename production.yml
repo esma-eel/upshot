@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  redis_server:
+    image: redis:alpine
+    # ports:
+    #   - 6379:6379
+    expose:
+      - 6379
+
+  django_server:
+    build:
+      context: .
+      dockerfile: ./production.Dockerfile
+    # command: python manage.py runserver 0.0.0.0:8000
+    command: ./dj.commands.production.sh
+    # volumes:
+    #   - .:/usr/src/app
+    volumes:
+      - staticfiles_volume:/home/app/web/_static_root
+      - mediafiles_volume:/home/app/web/_media
+    # ports:
+    #   - 8000:8000
+    expose:
+      - 8000
+    env_file:
+      - ./config/.envs/django/.env.prod.django
+    depends_on:
+      - postgres_db
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./production.Dockerfile
+    command: ./celery.runner.production.sh
+    env_file:
+      - ./config/.envs/django/.env.prod.django
+    depends_on:
+      - django_server
+  
+  postgres_db:
+    image: postgres:15
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./config/.envs/postgres/.env.prod.postgres
+  
+  nginx_server:
+    build: ./nginx
+    volumes:
+      - staticfiles_volume:/home/app/web/_static_root
+      - mediafiles_volume:/home/app/web/_media
+    ports:
+      # CSRF_TRUSTED_ORIGINS -> should have this
+      - 1337:80
+    depends_on:
+      - django_server
+  
+volumes:
+  postgres_db_data:
+  staticfiles_volume:
+  mediafiles_volume:
+

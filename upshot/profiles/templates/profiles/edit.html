@@ -1,0 +1,28 @@
+{% extends "dashboard/dashboard.html" %}
+{% block title %} Profile Edit {% endblock title %}
+
+{% block content %}
+<h1>Profile Edit</h1>
+<form action="." method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% comment %} profile {% endcomment %}
+    <h4>Profile</h4>
+    {{ profile_form.as_p }}
+
+    {% comment %} phone_numbers {% endcomment %}
+    <h4>Phone Numbers</h4>
+    {{ phone_number_formset.as_p }}
+
+    {% comment %} emails {% endcomment %}
+    <h4>Emails</h4>
+    {{ email_formset.as_p }}
+
+    {% comment %} addresses {% endcomment %}
+    <h4>Address</h4>
+    {{ address_formset.as_p }}
+
+
+    <button type="submit">Submit</button>
+</form>
+{% endblock content %}
+

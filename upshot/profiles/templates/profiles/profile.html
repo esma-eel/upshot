@@ -1,0 +1,18 @@
+{% extends "dashboard/dashboard.html" %}
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+<h1>Profile</h1>
+<div>
+    {% if profile.name %}
+    <h2>name: {{ profile.name }}</h2>
+    {% endif %}
+    <h2>username: {{ profile.user }}</h2>
+</div>
+{% if profile.avatar %}
+<div>
+    <h2>Avatar</h2>
+    <img src="{{ profile.avatar.url }}" alt="{{profile.avatar.name}}"/>
+</div>
+{% endif %}
+{% endblock content %}
