@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
 
-from actions.utils import create_action
+from upshot.actions.utils import create_action
 
 from .forms import CreateCommentForm, SearchForm
 from .models import Article

@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from mentor.models import MentorSetting, MentorRequest
+from upshot.mentor.models import MentorSetting, MentorRequest
 
 
 class MentorSettingFilterSet(filters.FilterSet):

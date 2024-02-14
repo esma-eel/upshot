@@ -6,7 +6,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 from rest_framework.decorators import action
-from article.models import Article, Comment
+from upshot.article.models import Article, Comment
 from .serializers import ArticleModelSerializer, CommentModelSerializer
 from .filters import ArticleFilterSet, CommentFilterSet
 

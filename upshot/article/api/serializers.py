@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from article.models import Article, Comment
+from upshot.article.models import Article, Comment
 
 
 class ArticleModelSerializer(TaggitSerializer, serializers.ModelSerializer):

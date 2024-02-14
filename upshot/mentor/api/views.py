@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from mentor.models import MentorSetting, MentorRequest
+from upshot.mentor.models import MentorSetting, MentorRequest
 from .serializers import (
     MentorSettingModelSerializer,
     MentorRequestModelSerializer,

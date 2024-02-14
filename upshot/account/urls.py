@@ -1,7 +1,5 @@
-from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from .forms import PasswordResetFormEmailChecker
 from .views import (
     ajax_article_actions,
     ajax_comment_actions,
@@ -24,46 +22,6 @@ from .views import (
 )
 
 urlpatterns = [
-    # start of django auth views
-    path(
-        "password_change/",
-        auth_views.PasswordChangeView.as_view(),
-        name="password_change",
-    ),
-    path(
-        "password_change/done/",
-        auth_views.PasswordChangeDoneView.as_view(),
-        name="password_change_done",
-    ),
-    path(
-        "password_reset/",
-        auth_views.PasswordResetView.as_view(
-            form_class=PasswordResetFormEmailChecker
-        ),
-        name="password_reset",
-    ),
-    path(
-        "password_reset/done/",
-        auth_views.PasswordResetDoneView.as_view(),
-        name="password_reset_done",
-    ),
-    path(
-        "reset/<uidb64>/<token>/",
-        auth_views.PasswordResetConfirmView.as_view(),
-        name="password_reset_confirm",
-    ),
-    path(
-        "reset/done/",
-        auth_views.PasswordResetCompleteView.as_view(),
-        name="password_reset_complete",
-    ),
-    path(
-        "login/",
-        auth_views.LoginView.as_view(redirect_authenticated_user=True),
-        name="login",
-    ),
-    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    # end of django auth_views
     path("register/", user_registration, name="register"),
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/profile_edit/", profile_edit, name="profile_edit"),

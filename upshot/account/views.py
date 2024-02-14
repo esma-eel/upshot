@@ -7,12 +7,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 
-from actions.models import Action
-from actions.utils import create_action
-from article.forms import ArticleCreateEditForm
-from article.models import Article, Comment
-from mentor.forms import MentorSettingForm
-from mentor.models import MentorRequest, MentorSetting
+from upshot.actions.models import Action
+from upshot.actions.utils import create_action
+from upshot.article.forms import ArticleCreateEditForm
+from upshot.article.models import Article, Comment
+from upshot.mentor.forms import MentorSettingForm
+from upshot.mentor.models import MentorRequest, MentorSetting
 
 from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
 from .models import Contact, Profile

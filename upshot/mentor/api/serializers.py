@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from mentor.models import MentorSetting, MentorRequest
+from upshot.mentor.models import MentorSetting, MentorRequest
 
 
 class MentorSettingModelSerializer(serializers.ModelSerializer):

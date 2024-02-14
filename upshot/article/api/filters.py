@@ -1,7 +1,7 @@
 from django.contrib.postgres.search import SearchVector
 from django_filters import rest_framework as filters
 from taggit.models import Tag
-from article.models import Article, Comment
+from upshot.article.models import Article, Comment
 
 
 class ArticleFilterSet(filters.FilterSet):

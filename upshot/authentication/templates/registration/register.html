@@ -1,16 +1,34 @@
-{% extends "authentication/base.html" %}
+{% extends "account/account_base.html" %}
 {% load static %}
-{% block title %}Register{% endblock title %}
+{% block title %}ثبت نام در سامانه{% endblock title %}
+{% block form_title %}
+<h1 class="h4">ثبت نام</h1>
+{% endblock form_title %}
 
 {% block content %}
-<form action="." method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="form-group">
-        {{field}}
+<div class="row mx-4">
+    <div class="col">
+        <form action="." method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                {{field}}
+            </div>
+            {% endfor %}
+            {% comment %} محل اضافه کردن کپچا {% endcomment %}
+            <button type="submit" class="my-5 btn btn-success btn-block rounded-pill btn-lg">ثبت نام</button>
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+        <hr>
+        <div class="text-center text-small mt-2 mb-4">
+            <a href="{% url 'login' %}">ورود به سامانه</a>
+        </div>
+        
     </div>
-    {% endfor %}
-    <button type="submit" class="">Register</button>
-    <input type="hidden" name="next" value="{{ next }}">
-</form>
+</div>
 {% endblock content %}
+
+
+{% block form_side_image %}
+<img src="{% static 'img/register_side_image.png' %}" alt="" class="img-fluid h-100">
+{% endblock form_side_image %}
