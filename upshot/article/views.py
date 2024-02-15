@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
@@ -10,7 +9,7 @@ from taggit.models import Tag
 
 from upshot.actions.utils import create_action
 from upshot.utils.request_helpers import is_ajax_header
-
+from upshot.account.models import User
 from .forms import CreateCommentForm, SearchForm
 from .models import Article
 

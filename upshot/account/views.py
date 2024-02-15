@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -16,7 +15,7 @@ from upshot.mentor.models import MentorRequest, MentorSetting
 from upshot.utils.request_helpers import is_ajax_header
 
 from .forms import ProfileEditForm, UserEditForm, UserRegistrationForm
-from .models import Contact, Profile
+from .models import Contact, Profile, User
 
 
 def user_registration(request):
