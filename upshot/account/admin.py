@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from .models import Contact
+from .models import Contact, Profile
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Contact)

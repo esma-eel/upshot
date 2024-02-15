@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from taggit.models import Tag
 
 from upshot.actions.utils import create_action
+from upshot.utils.request_helpers import is_ajax_header
 
 from .forms import CreateCommentForm, SearchForm
 from .models import Article
@@ -239,7 +240,7 @@ def ajax_vote_actions(request):
     """
     data = {"status": "ko"}
 
-    if request.is_ajax():
+    if is_ajax_header(request):
         id = request.POST.get("id")
         action = request.POST.get("action")
 

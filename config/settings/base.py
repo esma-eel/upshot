@@ -82,12 +82,7 @@ INSTALLED_APPS = [
     "ckeditor",
     "taggit",
     # upshot
-    "upshot.users",
-    "upshot.profiles",
-    "upshot.authentication",
-    "upshot.communications",
-    "upshot.adminstration",
-    "upshot.dashboard",
+    "upshot.account",
     "upshot.article",
     "upshot.actions",
     "upshot.mentor",
@@ -118,7 +113,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates", BASE_DIR / "upshot/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -202,7 +197,7 @@ MEDIA_URL = "media/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "auth.User"
 
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
@@ -302,7 +297,7 @@ CORS_ALLOW_HEADERS = (
     "x-requested-with",
 )
 """
-CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://\w+\.example\.com$"] #noqa
+CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://\w+\.example\.com$"] # noqa
 """
 
 # SIMPLE JWT
@@ -383,17 +378,16 @@ CELERY_RESULT_BACKEND = "django-db"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
 # Authentication
-LOGIN_URL = "authentication:login"
-LOGOUT_URL = "authentication:logout"
+LOGIN_URL = "login"
+LOGOUT_URL = "logout"
 LOGIN_REDIRECT_URL = "article:followings_articles"
-LOGOUT_REDIRECT_URL = "authentication:login"
+LOGOUT_REDIRECT_URL = "login"
 # in order to define absoulte url for models
 # you have enter appname.model then like template below
 ABSOLUTE_URL_OVERRIDES = {
-    "users.user": lambda user: reverse_lazy(
-        "profiles:profile", args=[user.username]
-    )
+    "auth.user": lambda user: reverse_lazy("user_profile", args=[user.username])
 }
+
 
 # slug settings for unicode
 ALLOW_UNICODE_SLUGS = True

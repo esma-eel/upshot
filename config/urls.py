@@ -29,22 +29,17 @@ static_url = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns = [
     # mtv
     path("admin/", admin.site.urls),
-    path("common/", include("boilerplate.common.urls")),
-    path("auth/", include("boilerplate.authentication.urls")),
-    path("profiles/", include("boilerplate.profiles.urls")),
-    path("users/", include("boilerplate.users.urls")),
-    #
-    path("account/", include("account.urls")),
-    path("article/", include("article.urls")),
+    path("account/", include("upshot.account.urls")),
+    path("article/", include("upshot.article.urls", namespace="article")),
     path("search/", search_objects, name="search_objects"),
     # api
-    path("api/article/", include("article.api.urls")),
-    path("api/mentor/", include("mentor.api.urls")),
-    #
-    path("api/common/", include("boilerplate.common.api.urls")),
-    path("api/auth/", include("boilerplate.authentication.api.urls")),
-    path("api/profiles/", include("boilerplate.profiles.api.urls")),
-    path("api/users/", include("boilerplate.users.api.urls")),
+    path(
+        "api/article/",
+        include("upshot.article.api.urls", namespace="api-article"),
+    ),
+    path(
+        "api/mentor/", include("upshot.mentor.api.urls", namespace="api-mentor")
+    ),
     # home
     path("", home_view, name="home"),
     # swagger
