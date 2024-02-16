@@ -77,4 +77,5 @@ class CreateUserModelSerializer(serializers.Serializer):
 class ContactModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
-        exclude = ["created"]
+        exclude = []
+        read_only_fields = ["created", "user_from"]

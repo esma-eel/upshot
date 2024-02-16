@@ -39,3 +39,8 @@ class IsAdminUser(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_superuser)
+
+
+class IsSenderOrReceiverOfContact(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user_from == request.user or obj.user_to == request.user

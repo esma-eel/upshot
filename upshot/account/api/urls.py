@@ -6,5 +6,6 @@ router = SimpleRouter()
 
 router.register("users", views.UserModelViewSet, basename="api-users")
 router.register("profiles", views.ProfileModelViewSet, basename="api-profiles")
+router.register("contacts", views.ContactModelViewSet, basename="api-contacts")
 
 urlpatterns = [] + router.urls

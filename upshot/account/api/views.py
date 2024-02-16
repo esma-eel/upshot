@@ -1,5 +1,6 @@
 import copy
 from django.db import transaction
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -16,12 +17,12 @@ from .serializers import (
     ProfileModelSerializer,
     PasswordCheckSerializer,
 )
-from .filters import UserFilterSet, ProfileFilterSet
+from .filters import UserFilterSet, ProfileFilterSet, ContactFilterSet
 from .permissions import (
-    IsAdminUser,
     IsStaffUser,
     IsOwnerOrReadOnlyOfProfile,
     IsOwnerOrReadOnlyOfUser,
+    IsSenderOrReceiverOfContact,
 )
 
 
@@ -118,3 +119,26 @@ class ProfileModelViewSet(ModelViewSet):
         except Profile.DoesNotExist:
             profile = serializer.save(user=user)
             return profile
+
+
+class ContactModelViewSet(ModelViewSet):
+    http_method_names = [
+        "get",
+        "post",
+        "delete",
+    ]
+
+    queryset = Contact.objects.all().order_by("-created")
+    serializer_class = ContactModelSerializer
+    permission_classes = [IsAuthenticated, IsSenderOrReceiverOfContact]
+    filterset_class = ContactFilterSet
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset()
+        owned_queryset = queryset.filter(Q(user_from=user) | Q(user_to=user))
+        return owned_queryset
+
+    def perform_create(self, serializer):
+        contact_request_object = serializer.save(user_from=self.request.user)
+        return contact_request_object
