@@ -1,5 +1,4 @@
 from ckeditor.fields import RichTextField
-from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -22,7 +21,7 @@ class Article(models.Model):
     title = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True, allow_unicode=True)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="articles"
+        "account.User", on_delete=models.CASCADE, related_name="articles"
     )
     # upload picture to paht based on upload date
     picture = models.ImageField(upload_to="articles/%Y/%m/%d", blank=True)
@@ -32,10 +31,10 @@ class Article(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     users_positive_vote = models.ManyToManyField(
-        User, related_name="articles_voted_positive", blank=True
+        "account.User", related_name="articles_voted_positive", blank=True
     )
     users_negative_vote = models.ManyToManyField(
-        User, related_name="articles_voted_negative", blank=True
+        "account.User", related_name="articles_voted_negative", blank=True
     )
     objects = models.Manager()
     published = PublishedManager()
@@ -57,7 +56,7 @@ class Comment(models.Model):
         Article, on_delete=models.CASCADE, related_name="comments"
     )
     user = models.ForeignKey(
-        User, related_name="comments", on_delete=models.CASCADE
+        "account.User", related_name="comments", on_delete=models.CASCADE
     )
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

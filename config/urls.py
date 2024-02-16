@@ -40,6 +40,14 @@ urlpatterns = [
     path(
         "api/mentor/", include("upshot.mentor.api.urls", namespace="api-mentor")
     ),
+    path(
+        "api/account/",
+        include("upshot.account.api.urls", namespace="api-account"),
+    ),
+    path(
+        "api/actions/",
+        include("upshot.actions.api.urls", namespace="api-actions"),
+    ),
     # home
     path("", home_view, name="home"),
     # swagger
