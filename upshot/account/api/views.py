@@ -55,8 +55,6 @@ class UserModelViewSet(ModelViewSet):
         elif action in ["register_user"]:
             self.permission_classes = []
 
-        print(self.permission_classes)
-
         return super().get_permissions()
 
     @transaction.atomic
@@ -98,3 +96,25 @@ class UserModelViewSet(ModelViewSet):
     )
     def register_user(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+
+class ProfileModelViewSet(ModelViewSet):
+    http_method_names = [
+        "get",
+        "post",
+        "patch",
+    ]
+    serializer_class = ProfileModelSerializer
+    queryset = Profile.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyOfProfile]
+    filterset_class = ProfileFilterSet
+    lookup_field = "user__username"
+    lookup_url_kwarg = "user__username"
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        try:
+            return user.profile
+        except Profile.DoesNotExist:
+            profile = serializer.save(user=user)
+            return profile

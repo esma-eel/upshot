@@ -38,7 +38,6 @@ class PasswordCheckSerializer(serializers.Serializer):
 
 
 class ProfileModelSerializer(serializers.ModelSerializer):
-
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
         if self.instance:
@@ -51,6 +50,7 @@ class ProfileModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
+            "id",
             "grade",
             "student_number",
             "photo",

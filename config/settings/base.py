@@ -226,7 +226,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": (  # None,
         "rest_framework.pagination.LimitOffsetPagination"
     ),
-    "DEFAULT_FILTER_BACKENDS": [],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.openapi.AutoSchema",
     "DEFAULT_THROTTLE_RATES": {"user": None, "anon": None},
     "NUM_PROXIES": None,
