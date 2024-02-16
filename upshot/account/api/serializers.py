@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenBlacklistSerializer
+from rest_framework_simplejwt.tokens import RefreshToken, SlidingToken
 from upshot.account.models import User, Profile, Contact
 from upshot.utils.password_helpers import (
     get_password_rules,
@@ -79,3 +81,11 @@ class ContactModelSerializer(serializers.ModelSerializer):
         model = Contact
         exclude = []
         read_only_fields = ["created", "user_from"]
+
+
+class JWTTokenBlacklistSerializer(TokenBlacklistSerializer):
+    token_class = RefreshToken
+
+
+class SlidingTokenBlacklistSerializer(TokenBlacklistSerializer):
+    token_class = SlidingToken

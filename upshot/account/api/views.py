@@ -9,6 +9,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
 )
 from rest_framework.decorators import action
+from rest_framework_simplejwt.views import TokenBlacklistView
 from upshot.account.models import User, Contact, Profile
 from .serializers import (
     ContactModelSerializer,
@@ -142,3 +143,15 @@ class ContactModelViewSet(ModelViewSet):
     def perform_create(self, serializer):
         contact_request_object = serializer.save(user_from=self.request.user)
         return contact_request_object
+
+
+class JWTTokenBlacklistView(TokenBlacklistView):
+    _serializer_class = (
+        "upshot.account.api.serializers.JWTTokenBlacklistSerializer"
+    )
+
+
+class SlidingTokenBlacklistView(TokenBlacklistView):
+    _serializer_class = (
+        "upshot.account.api.serializers.SlidingTokenBlacklistSerializer"
+    )
