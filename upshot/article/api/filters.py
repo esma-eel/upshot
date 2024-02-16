@@ -25,7 +25,7 @@ class ArticleFilterSet(filters.FilterSet):
             article_qs = queryset.filter(tags__in=tag_qs, status="published")
             return article_qs
 
-        return queryset
+        return queryset.none()
 
 
 class CommentFilterSet(filters.FilterSet):
